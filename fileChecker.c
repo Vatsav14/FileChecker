@@ -3,6 +3,7 @@
 #include <string.h>
 #include <sys/inotify.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <time.h>
 
@@ -16,13 +17,14 @@ int main(){
 	char buffer[BUFFER_LEN];
 	fd = inotify_init();
 
-	char *filePath = "/home/vatsav14/code/test/";
+	char *filePath = "/data/cat/LangLab/dev/file_checker";
 	struct stat t_stat;
+	struct timeval tv;
 
 	if (fd < 0)
 		printf("Notify did not initialize");
 
-	watch_desc = inotify_add_watch(fd, "/home/vatsav14/code/test", IN_CREATE);
+	watch_desc = inotify_add_watch(fd, filePath, IN_CREATE);
 
 	if (watch_desc == -1)
 		printf("Couldn't add watch to the path");
@@ -40,17 +42,22 @@ int main(){
 			if(event->len){
 				if(event->mask & IN_CREATE){
 
+					// Get the timeval data
+					gettimeofday(&tv, NULL);
+
 					// Get the date-time of file creation
 					char fileName[256];
-					snprintf(fileName, sizeof(fileName), "%s%s", filePath, event->name);
+					snprintf(fileName, sizeof(fileName), "%s/%s", filePath, event->name);
 					// To print out the return value of stat: printf("%d\n", stat(fileName, &t_stat));
 					stat(fileName, &t_stat);
 					struct tm *timeinfo = localtime(&t_stat.st_ctime);
 
 					if(event->mask & IN_ISDIR)
 						printf("Directory \"%s\" was created\n", event->name);
-					else
-						printf("File \"%s\" was created on %s\n", event->name, asctime(timeinfo));
+					else {
+						printf("%s: %ld.%09ld\n", event->name, t_stat.st_ctim.tv_sec, t_stat.st_ctim.tv_nsec);
+						printf("%s: %ld.%06ld\n", event->name, tv.tv_sec, tv.tv_usec);
+					}
 				}
 				i += MONITOR_EVENT_SIZE + event->len;
 			}
