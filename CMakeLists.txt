@@ -5,6 +5,6 @@ project(fileChecker)
 
 find_package(Boost COMPONENTS program_options REQUIRED)
 
-add_executable(${PROJECT_NAME} fileChecker.c)
+add_executable(${PROJECT_NAME} fileChecker.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${Boost_LIBRARIES})
 
