@@ -6,7 +6,6 @@
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <fstream>
 #include <time.h>
 #include <boost/program_options.hpp>
 
@@ -18,12 +17,11 @@
 using namespace std;
 namespace po = boost::program_options;
 
-void outputFunc(int, string, fstream&);
+void outputFunc(int, char*, FILE**);
 
 int main(int ac, char* av[]){
 	int fd, watch_desc, out;
 	char buffer[BUFFER_LEN];
-	char outputMsg[300];
 	fd = inotify_init();
 	string path;
 
@@ -53,12 +51,13 @@ int main(int ac, char* av[]){
 		cerr << "Exception of unknown type!" << endl;
 	}
 	
-	char filePath[128]; // = "/data/cat/LangLab/dev/file_checker";
+	char filePath[128];
+	char outputMsg[300];
 	strcpy(filePath, path.c_str());
 	struct stat t_stat;
 	struct timeval tv;
-	fstream outFile;
-	outFile.open("outFile.txt", ios::out); // Change to ios::app to append instead
+	FILE *outFile;
+	outFile = fopen("outFile.txt", "w"); // Change to a to append instead
 
 	if (fd < 0)
 		printf("Notify did not initialize");
@@ -99,11 +98,8 @@ int main(int ac, char* av[]){
 						//printf("%s: %ld.%09ld\n", event->name, t_stat.st_ctim.tv_sec, t_stat.st_ctim.tv_nsec);
 						//printf("%s: %ld.%06ld\n", event->name, tv.tv_sec, tv.tv_usec);
 
-						// Format the output string
 						snprintf(outputMsg, sizeof(outputMsg), "%s: %ld.%09ld\n", event->name, t_stat.st_ctim.tv_sec, t_stat.st_ctim.tv_nsec);
-						
-						cout << out;
-						outputFunc(out, outputMsg, outFile);
+						outputFunc(out, outputMsg, &outFile);
 					}
 				}
 				i += MONITOR_EVENT_SIZE + event->len;
@@ -111,20 +107,23 @@ int main(int ac, char* av[]){
 		}
 	}
 	
-	outFile.close();
+	fclose(outFile);
 	inotify_rm_watch(fd, watch_desc);
 	close(fd);
+
+	return 0;
 }
 
 // Function to output the timestamp in the format specified by the
 // boost argument '--out'
-void outputFunc(int choice, string output, fstream &outFile) {
+void outputFunc(int choice, char* output, FILE** outFile) {
 	switch(choice) {
 		case 0: cout << output;
 			break;
 
-		case 1: if (outFile.is_open()) {
-				outFile << output;
+		case 1: if (*outFile) {
+				fprintf(*outFile, "%s", output);
+				fflush(*outFile);
 			}
 			break;
 
