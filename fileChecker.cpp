@@ -1,20 +1,21 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <iostream>
 #include <sys/inotify.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <time.h>
+#include <ctime>
 #include <boost/program_options.hpp>
+
+#include "publish.h"
 
 #define MAX_EVENT_MONITOR 2048
 #define NAME_LEN 32
 #define MONITOR_EVENT_SIZE (sizeof(struct inotify_event))
 #define BUFFER_LEN MAX_EVENT_MONITOR*(MONITOR_EVENT_SIZE+NAME_LEN)
 
-using namespace std;
 namespace po = boost::program_options;
 
 void outputFunc(int, char*, FILE**);
@@ -23,14 +24,14 @@ int main(int ac, char* av[]){
 	int fd, watch_desc, out;
 	char buffer[BUFFER_LEN];
 	fd = inotify_init();
-	string path;
+	std::string path;
 
 	// Boost command line options
 	try {
 		po::options_description desc("Allowed options");
 		desc.add_options()("help,h", "Show this help message")(
 			"path",
-			po::value<string>(&path)->default_value("/data/cat/LangLab/dev/file_checker"),
+			po::value<std::string>(&path)->default_value("/data/cat/LangLab/dev/file_checker"),
 			"Set the path to be monitored")(
 			"out",
 			po::value<int>(&out)->default_value(0),
@@ -41,14 +42,15 @@ int main(int ac, char* av[]){
 		po::notify(vm);
 
 		if (vm.count("help")) {
-			cout << desc << endl;
+			std::cout << desc << std::endl;
 			return 0;
 		}
-	} catch (exception const& e) {
-		cerr << "error: " << e.what() << endl;
+	} catch (std::exception const& e) {
+		std::cerr << "error: " << e.what() << std::endl;
 		return 1;
 	} catch (...) {
-		cerr << "Exception of unknown type!" << endl;
+		std::cerr << "Exception of unknown type!" << std::endl;
+		return 1;
 	}
 	
 	char filePath[128];
@@ -60,19 +62,19 @@ int main(int ac, char* av[]){
 	outFile = fopen("outFile.txt", "w"); // Change to a to append instead
 
 	if (fd < 0)
-		printf("Notify did not initialize");
+		std::cerr << "Notify did not initialize";
 
 	watch_desc = inotify_add_watch(fd, filePath, IN_CREATE);
 
 	if (watch_desc == -1)
-		printf("Couldn't add watch to the path");
+		std::cout << "Couldn't add watch to the path" << std::endl;
 	else
-		printf("Monitoring path...\n");
-	
-	while(1){
+		std::cout << "Monitoring path " << path << std::endl;
+
+	while(true){
 		int total_read = read(fd, buffer, BUFFER_LEN);
 		if(total_read < 0)
-			printf("Read error");
+			std::cerr << "Read error";
 
 		int i = 0;	
 		while(i < total_read){
@@ -81,7 +83,7 @@ int main(int ac, char* av[]){
 				if(event->mask & IN_CREATE){
 
 					// Get the timeval data
-					gettimeofday(&tv, NULL);
+					// gettimeofday(&tv, NULL);
 
 					// Get the date-time of file creation
 					char fileName[256];
@@ -118,10 +120,12 @@ int main(int ac, char* av[]){
 // boost argument '--out'
 void outputFunc(int choice, char* output, FILE** outFile) {
 	switch(choice) {
-		case 0: cout << output;
+		case 0:
+			std::cout << output;
 			break;
 
-		case 1: if (*outFile) {
+		case 1:
+			if (*outFile) {
 				fprintf(*outFile, "%s", output);
 				fflush(*outFile);
 			}
