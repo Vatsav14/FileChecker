@@ -131,6 +131,8 @@ void outputFunc(int choice, char* output, FILE** outFile) {
 			// NOTES:
 			// -- The string to be used as output is 'output'
 			// -- No need to format anything else
+			// myMosq(id, "publish_file_name", host, port);
+			// send_message(output);
 			break;
 	}
 }
