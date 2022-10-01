@@ -100,7 +100,7 @@ int main(int ac, char* av[]){
 						//printf("%s: %ld.%09ld\n", event->name, t_stat.st_ctim.tv_sec, t_stat.st_ctim.tv_nsec);
 						//printf("%s: %ld.%06ld\n", event->name, tv.tv_sec, tv.tv_usec);
 
-						snprintf(outputMsg, sizeof(outputMsg), "%s: %ld.%09ld\n", event->name, t_stat.st_ctim.tv_sec, t_stat.st_ctim.tv_nsec);
+						snprintf(outputMsg, sizeof(outputMsg), "%s: %s.%09ldZ\n", event->name, asctime(timeinfo), t_stat.st_ctim.tv_nsec);
 						outputFunc(out, outputMsg, &outFile);
 					}
 				}
