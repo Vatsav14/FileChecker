@@ -1,2 +1,0 @@
-/usr/bin/ar qc libpublish.a  CMakeFiles/publish.dir/publish.cpp.o
-/usr/bin/ranlib libpublish.a

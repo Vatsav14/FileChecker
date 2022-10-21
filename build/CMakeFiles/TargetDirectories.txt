@@ -1,6 +1,0 @@
-/home/cat/Downloads/FileChecker/build/CMakeFiles/rebuild_cache.dir
-/home/cat/Downloads/FileChecker/build/CMakeFiles/edit_cache.dir
-/home/cat/Downloads/FileChecker/build/CMakeFiles/fileChecker.dir
-/home/cat/Downloads/FileChecker/build/publish/CMakeFiles/rebuild_cache.dir
-/home/cat/Downloads/FileChecker/build/publish/CMakeFiles/edit_cache.dir
-/home/cat/Downloads/FileChecker/build/publish/CMakeFiles/publish.dir

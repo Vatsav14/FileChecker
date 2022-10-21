@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/fileChecker.dir/fileChecker.cpp.o  -o fileChecker  /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.71.0 publish/libpublish.a -lmosquitto 
