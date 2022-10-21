@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/cat/Downloads/FileChecker/publish/publish.cpp
+publish.h
+/home/cat/Downloads/FileChecker/publish/publish.h
+iostream
+-
+cstring
+-
+mosquitto.h
+-
+
+/home/cat/Downloads/FileChecker/publish/publish.h
+

@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../publish/publish.h
+
+/home/cat/Downloads/FileChecker/fileChecker.cpp
+cstdio
+-
+cstdlib
+-
+string
+-
+iostream
+-
+sys/inotify.h
+-
+sys/stat.h
+-
+sys/time.h
+-
+unistd.h
+-
+ctime
+-
+boost/program_options.hpp
+-
+publish.h
+/home/cat/Downloads/FileChecker/publish.h
+
