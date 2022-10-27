@@ -59,7 +59,8 @@ int main(int ac, char* av[]){
 	struct stat t_stat;
 	struct timeval tv;
 	FILE *outFile;
-	outFile = fopen("outFile.txt", "w"); // Change to a to append instead
+	std::string outPath = path + "/" + "outFile.csv";
+	outFile = fopen(outPath.c_str(), "w"); // Change to a to append instead
 
 	if (fd < 0)
 		std::cerr << "Notify did not initialize";
@@ -80,7 +81,10 @@ int main(int ac, char* av[]){
 		while(i < total_read){
 			struct inotify_event *event = (struct inotify_event*) &buffer[i];
 			if(event->len){
-				if(event->mask & IN_CREATE){
+				if(event->mask & IN_CREATE){	
+
+					if (strcmp(event->name, "ffmpeg.log") == 0)
+						break;
 
 					// Get the timeval data
 					// gettimeofday(&tv, NULL);
@@ -103,7 +107,7 @@ int main(int ac, char* av[]){
 						char ISOBuff[100];
 						strftime(ISOBuff, sizeof(outputMsg), "%FT%T", timeinfo);
 
-						snprintf(outputMsg, sizeof(outputMsg), "%s: %s.%09ldZ\n", event->name, ISOBuff, t_stat.st_ctim.tv_nsec);
+						snprintf(outputMsg, sizeof(outputMsg), "%s,%s.%09ldZ\n", event->name, ISOBuff, t_stat.st_ctim.tv_nsec);
 						outputFunc(out, outputMsg, &outFile);
 					}
 				}

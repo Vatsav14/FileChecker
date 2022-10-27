@@ -37,3 +37,12 @@ If you want to monitor the path `/home/user/screenshots` and have the output in 
 ```
 
 Similarly, you can have other combinations
+
+## To rename images to their respective timestamps
+
+Navigate to the `scripts/` folder to run the `timestampRename` program
+
+```bash
+./timestampRename.py -d /home/user/screenshots
+```
+
