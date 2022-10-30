@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 #include <ctime>
+#include <string.h>
 #include <boost/program_options.hpp>
 
 #include "publish.h"
@@ -81,9 +82,11 @@ int main(int ac, char* av[]){
 		while(i < total_read){
 			struct inotify_event *event = (struct inotify_event*) &buffer[i];
 			if(event->len){
-				if(event->mask & IN_CREATE){	
+				if(event->mask & IN_CREATE){
 
-					if (strcmp(event->name, "ffmpeg.log") == 0)
+					std::string filename = event->name;
+					
+					if (!(filename.substr(filename.find_last_of(".") + 1) == "png"))
 						break;
 
 					// Get the timeval data
