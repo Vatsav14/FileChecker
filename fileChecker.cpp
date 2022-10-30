@@ -96,7 +96,7 @@ int main(int ac, char* av[]){
 					snprintf(fileName, sizeof(fileName), "%s/%s", filePath, event->name);
 					// To print out the return value of stat: printf("%d\n", stat(fileName, &t_stat));
 					stat(fileName, &t_stat);
-					struct tm *timeinfo = localtime(&t_stat.st_ctime);
+					struct tm *timeinfo = gmtime(&t_stat.st_ctime);
 
 					if(event->mask & IN_ISDIR)
 						printf("Directory \"%s\" was created\n", event->name);
