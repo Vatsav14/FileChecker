@@ -13,7 +13,7 @@ path = args.directory.rstrip('/')
 
 with open(f"{args.directory}/outFile.csv", "r") as outFile:
     for line in outFile:
-        oldName, newName = line.strip().split(',')
+        oldName, newName = line.strip().split(';')
         newName = newName.replace(':', '_') + ".png"
         oldName, newName = f"{path}/{oldName}", f"{path}/{newName}"
         os.rename(oldName, newName)
