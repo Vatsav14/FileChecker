@@ -110,7 +110,7 @@ int main(int ac, char* av[]){
 						char ISOBuff[100];
 						strftime(ISOBuff, sizeof(outputMsg), "%FT%T", timeinfo);
 
-						snprintf(outputMsg, sizeof(outputMsg), "%s,%s.%09ldZ\n", event->name, ISOBuff, t_stat.st_ctim.tv_nsec);
+						snprintf(outputMsg, sizeof(outputMsg), "%s;%s.%09ldZ\n", event->name, ISOBuff, t_stat.st_ctim.tv_nsec);
 						outputFunc(out, outputMsg, &outFile);
 					}
 				}
